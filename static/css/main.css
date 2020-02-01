@@ -56,11 +56,13 @@ a {
 
 table, td, th {
     border: 1px solid white;
+    /*border-radius: 5px;*/
 }
 
 table {
-    border-collapse: collapse;
+    /*border-collapse: collapse;*/
     width: 100%;
+    border-radius: 5px;
 }
 
 th {
@@ -94,10 +96,11 @@ input[value="Add Product"] {
     font-weight: bold;
     cursor: pointer;
     background-color: #034732;
+    border-radius: 5px;
 }
 
 input[type=text] {
-    color: #d94f19;
+    color: #034732;
     font-weight: bold;
 }
 
