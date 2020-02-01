@@ -29,9 +29,9 @@
         </tr>
         {% for task in tasks %}
             <tr>
-                <td>{{ task.name }}</td>
-                <td>{{ task.description }}</td>
-                <td>${{(task.price)/100 }}</td>
+                <td>{{ task.product_name }}</td>
+                <td>{{ task.product_description }}</td>
+                <td>${{(task.product_price)/100 }}</td>
                 <td>{{ task.date_created.date() }}</td> <!--should perhaps not be visible to custoemrs-->
                 <td>
                     <a href="/delete/{{task.id}}">Delete</a>
@@ -46,10 +46,10 @@
     <div class="form">
         <form action="/" method="POST">
             <h4>Add Product by completing the form below</h4>
-            <input type="text" name="name" id="content" placeholder="Product name">
-            <input type="text" name="description" id="content" placeholder="Description of product">
-            <input type="text" name="price" id="content"placeholder="Price of product"><br>
-            <input type="submit" value="Add Product">
+            <input type="text" name="product_name" id="product_name" placeholder="Product name">
+            <input type="text" name="product_description" id="content" placeholder="Description of product">
+            <input type="text" name="product_price" id="content"placeholder="Price of product"><br>
+            <input type="submit" name="new_product_submit" value="Add Product">
         </form>
     </div>
 </div>
