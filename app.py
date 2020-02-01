@@ -1,13 +1,29 @@
 from flask import Flask
 from flask import render_template
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+db = SQLAlchemy(app)
+
+class Todo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String(200), nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return '<Task %r>' % self.id
 
 
 @app.route("/")
 def index():
     return render_template("index.html")
 
+@app.route("/vendors")
+def vendors():
+    return render_template("vendors.html")
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    # app.run(host="0.0.0.0", port=8080)   # This didn't work for me, so I set it to the line under
+    app.run(debug=True)
