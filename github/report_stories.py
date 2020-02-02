@@ -75,10 +75,17 @@ def export_issues():
     label_user_story = repo.get_label("user story")
     label_priority_1 = repo.get_label("priority 1")
 
-    for issue in repo.get_issues():
-        if label_user_story in issue.labels and label_priority_1 in issue.labels:
-            # customize format string and arguments
-            print("#{}: {}\n{}\n\n".format(issue.number, issue.title, issue.body))
+    for issue in repo.get_issues(
+        state="open", direction="desc", labels=[label_user_story,]
+    ):
+        print(
+            "#{}: {}\n{}\n{}\n\n".format(
+                issue.number,
+                issue.title,
+                ", ".join([label.name for label in issue.labels]),
+                issue.body,
+            )
+        )
 
 
 if __name__ == "__main__":
