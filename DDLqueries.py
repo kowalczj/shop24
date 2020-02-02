@@ -73,5 +73,6 @@ c.execute("""CREATE TABLE IF NOT EXISTS reviews (
                 REFERENCES accounts (account_id)
             )""")
 
+
 conn.commit()
 conn.close()
