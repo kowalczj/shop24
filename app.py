@@ -17,6 +17,23 @@ class Todo(db.Model):
     def __repr__(self):
         return '<Task %r>' % self.id
 
+class Customer(db.Model):
+
+    id           = db.Column(db.Integer, primary_key=True)
+    first_name   = db.Column(db.String(50), nullable=False)
+    last_name	 = db.Column(db.String(50), nullable=False)
+    email	 = db.Column(db.String(100), nullable=False)
+    phone        = db.Column(db.String(10), nullable=True)
+    street_addr  = db.Column(db.String(50), nullable=True)
+    state        = db.Column(db.String(2), nullable=True)
+    zipcode      = db.Column(db.String(5), nullable=True)
+    city         = db.Column(db.String(100), nullable=True)
+
+
+    def __repr__(self):
+
+        return '<Customer {}>'.format(self.id)
+
 
 @app.route("/", methods=['POST', 'GET'])
 def index():
@@ -73,6 +90,8 @@ def update(id):
 @app.route("/vendors")
 def vendors():
     return render_template("vendors.html")
+
+
 
 if __name__ == "__main__":
     # app.run(host="0.0.0.0", port=8080)   # This didn't work for me, so I set it to the line under
