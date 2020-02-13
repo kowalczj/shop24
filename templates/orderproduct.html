@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Shop24!</title>
+{% endblock %}
+
+{% block body %}
+<div class="topnav">
+    <a href="/">Products</a>
+    <a href="vendors">Vendors</a>
+    <a class="active" href="orders">Orders</a>
+    <a href="make_model.html">Contact</a>
+</div>
+
+<div class="content">
+    <h1 style="text-align: center">Products for Current Order</h1>
+    <h3 style="text-align: center"><em>A simplified eCommerce Experience</em></h3>
+    {% if tasks|length < 1 %}
+    <h4 style="text-align: center">This order contains no products.</h4>
+    {% else %}
+
+
+    <table>
+        <tr>
+            <th>Product ID</th>
+            <th>Quantity</th>
+            <th>Actions</th>
+        </tr>
+        {% for task in tasks %}
+            <tr>
+                <td>{{ task.product_id }}</td>
+                <td>{{ task.quantity }}</td>
+                <td>
+                    <a href="/orders/delete/{{task.id}}">Delete</a>
+                    <br>
+                    <a href="/orders/update/{{task.id}}">Update</a>
+                </td> <!--should perhaps not be visible to custoemrs-->
+            </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</div>
+{% endblock %}
