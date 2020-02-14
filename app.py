@@ -7,6 +7,18 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 db = SQLAlchemy(app)
 
+class Account(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(200), nullable=False)
+    password = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(200), nullable=False)
+    street = db.Column(db.String(200), nullable=False)
+    city = db.Column(db.String(200), nullable=False)
+
+    def __repr__(self):
+        return '<Task %r>' % self.id
+
+
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_name = db.Column(db.String(200), nullable=False)
@@ -20,7 +32,7 @@ class Product(db.Model):
 
 class Order(db.Model):
     id =                  db.Column(db.Integer, primary_key=True)
-    account_id =          db.Column(db.Integer, nullable=False)
+    account_id =          db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
     order_date =          db.Column(db.DateTime, default=datetime.utcnow)
     shipment_priority =   db.Column(db.Integer)
 
@@ -30,8 +42,8 @@ class Order(db.Model):
 
 class OrderProduct(db.Model):
     id =           db.Column(db.Integer, primary_key=True)
-    order_id =     db.Column(db.Integer, nullable=False)
-    product_id =   db.Column(db.Integer, nullable=False)
+    order_id =     db.Column(db.Integer, db.ForeignKey('Order.id'), nullable=False)
+    product_id =   db.Column(db.Integer, db.ForeignKey('Product.id'), nullable=False)
     quantity =     db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
@@ -105,18 +117,14 @@ def vendors():
 @app.route("/orders", methods=['POST', 'GET'])
 def orders():
     if request.method == 'POST':
-        # orderID = request.form['order_id']
         accountID = request.form['account_id']
-        # orderDate = request.form['order_date']
+        shipmentPriority = request.form['shipment_priority']
 
         new_order = Order(
             account_id=accountID,
-            # order_date=orderDate
+            shipment_priority=shipmentPriority,
         )
-
-        print("New Order ID:")
-        print(new_order.account_id)
-        # print(new_order.order_date)
+        
 
         try:
             db.session.add(new_order)
@@ -147,11 +155,16 @@ def ordersUpdate(id):
 
     if request.method == 'POST':
         order.account_id = request.form['account_id']
+        order.shipment_priority = request.form['shipment_priority']
+
+        print("order: ", order.account_id)
+        print("order: ", order.shipment_priority)
 
         try:
             db.session.commit()
             return redirect('/orders')
-        except:
+        except Exception as e:
+            print(e)
             return 'There was an issue updating your task'
 
     else:

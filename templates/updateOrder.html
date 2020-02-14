@@ -6,12 +6,13 @@
 
 {% block body %}
 <div class="content">
-    <h1 style="text-align: center">Update Task</h1>
+    <h1 style="text-align: center">Update Order</h1>
 
     <div class="form">
         <form action="/orders/update/{{task.id}}" method="POST">
             <input type="number" name="account_id" placeholder="Account ID">
-            <input type="submit" value="Add Product">
+            <input type="number" name="shipment_priority" placeholder="Shipment Priority">
+            <input type="submit" value="Update Order">
         </form>
     </div>
 </div>
