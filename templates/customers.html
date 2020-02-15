@@ -8,16 +8,16 @@
 
 <div class="topnav">
     <a href="/">Products</a>
-    <a href="vendors">Vendors</a>
-    <a href="profile">Profile</a>
-    <a href="contact">Contact</a>
-    <a href="orders">Orders<br><span class="employee_view">(admin only)</span></a>
-    <a class="active" href="customers">Customers</a>
+    <a href="vendors.html">Vendors</a>
+    <a href="profile.html">Profile</a>
+    <a href="contact.html">Contact</a>
+    <a href="orders.html">Orders<span class="employee_view">(admin only)</span></a>
+    <a class="active" href="customers.html">Customers</a>
 </div>
 <div class="content">
     <h1 style="text-align: center">Cusomter Page</h1>
     <h3 style="text-align: center"><em>A simplified eCommerce Experience</em></h3>
-    {% if tasks|length < 1 %}
+    {% if results|length < 1 %}
     <h4 style="text-align: center">There are no products for sale.<br>(If you're a siteowner or vendor you may add them below)</h4>
     {% else %}
     
@@ -32,23 +32,23 @@
             <th>zipcode</th>
             <th>city</th>
         </tr>
-        {% for task in tasks %}
+        {% for r in results %}
             <tr>
-                <td>{{ task.first_name}}</td>
-                <td>{{ task.last_name}}</td>
-                <td>{{ task.email}}</td>
-                <td>{{ task.phone}}</td>
-                <td>{{ task.street_adr}}</td>
-                <td>{{ task.state}}</td>
-                <td>{{ task.zipcode}}</td>
-                <td>{{ task.city}}</td>
+                <td>{{ r.first_name}}</td>
+                <td>{{ r.last_name}}</td>
+                <td>{{ r.email}}</td>
+                <td>{{ r.phone}}</td>
+                <td>{{ r.street_adr}}</td>
+                <td>{{ r.state}}</td>
+                <td>{{ r.zipcode}}</td>
+                <td>{{ r.city}}</td>
             </tr>
         {% endfor %}
     </table>
     {% endif %}
 
     <div class="form">
-        <form action="/" method="POST">
+        <form action="/customers" method="POST">
             <h4>finisih signing up by completing the form below</h4>
             <input type="text" name="first_name" id="first_name" placeholder="first name">
             <input type="text" name="last_name" id="last_name" placeholder="last name">
