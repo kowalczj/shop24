@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Shop24 Orders</title>
+{% endblock %}
+
+{% block body %}
+<div class="topnav">
+    <a href="/">Products</a>
+    <a href="vendors">Vendors</a>
+    <a href="profile">Profile</a>
+    <a href="contact">Contact</a>
+    <a class="active" href="orders">Orders<br><span class="employee_view">(admin only)</span></a>
+    <a href="customers">Customers<br><span class="employee_view">(admin only)</span></a>
+</div>
+<div class="content">
+    <h1 style="text-align: center">Welcome to Shop24</h1>
+    <h3 style="text-align: center"><em>A Simplified eCommerce Experience</em></h3>
+    {% if ords|length < 1 %}
+    <h4 style="text-align: center">No orders have been placed yet.</h4>
+    {% else %}
+    
+    <table>
+        <tr>
+            <th>Order ID</th>
+            <th>Product ID</th>
+            <th>Name</th>
+            <th>Priority</th>
+        </tr>
+        {% for ord in ords %}
+            <tr>
+                <td>{{ ord.id }}</td>
+                <td>{{ ord.product_id }}</td>
+                <td>{{ ord.order_name }}</td>
+                <td>{{ ord.is_priority }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</div>
+{% endblock %}
