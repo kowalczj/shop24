@@ -17,6 +17,23 @@ class Todo(db.Model):
     def __repr__(self):
         return '<Task %r>' % self.id
 
+class Customer(db.Model):
+
+    id           = db.Column(db.Integer, primary_key=True)
+    first_name   = db.Column(db.String(50), nullable=False)
+    last_name	 = db.Column(db.String(50), nullable=False)
+    email	 = db.Column(db.String(100), nullable=False)
+    phone        = db.Column(db.String(10), nullable=True)
+    street_addr  = db.Column(db.String(50), nullable=True)
+    state        = db.Column(db.String(2), nullable=True)
+    zipcode      = db.Column(db.String(5), nullable=True)
+    city         = db.Column(db.String(100), nullable=True)
+
+
+    def __repr__(self):
+
+        return '<Customer {}>'.format(self.id)
+
 
 @app.route("/", methods=['POST', 'GET'])
 def index():
@@ -40,6 +57,31 @@ def index():
     else:
         tasks = Todo.query.order_by(Todo.date_created).all()
         return render_template("index.html", tasks = tasks)
+
+@app.route('/customers', methods=['POST', 'GET'])
+def customers():
+
+    customers = Customer.query.all()
+
+    if request.method == 'GET':
+
+        return render_template('customers.html', results = customers)       
+
+    elif request.method == 'POST':
+    
+        customer = Customer(first_name     = request.form['first_name'], 
+                            last_name      = request.form['last_name'],
+                            email          = request.form['email'],
+                            phone          = request.form['phone'], 
+                            street_addr    = request.form['street_addr'],
+                            state          = request.form['state'],
+                            zipcode        = request.form['zipcode']
+                            city           = request.form['city'])
+
+        db.session.add(customer)
+        db.session.commit()
+        
+        return render_template('customers.html', results = customers)  
 
 @app.route('/delete/<int:id>')
 def delete(id):
@@ -74,6 +116,7 @@ def update(id):
 def vendors():
     return render_template("vendors.html")
 
+
 @app.route("/profile")
 def profile():
     return render_template("profile.html")
@@ -85,6 +128,7 @@ def contact():
 @app.route("/orders")
 def orders():
     return render_template("orders.html")
+
 
 if __name__ == "__main__":
     # app.run(host="0.0.0.0", port=8080)   # This didn't work for me, so I set it to the line under
