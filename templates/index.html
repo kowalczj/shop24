@@ -8,13 +8,15 @@
 <div class="topnav">
     <a class="active" href="/">Products</a>
     <a href="vendors">Vendors</a>
-    <a href="orders">Orders</a>
-    <a href="make_model.html">Contact</a>
+    <a href="profile">Profile</a>
+    <a href="contact">Contact</a>
+    <a href="orders">Orders<br><span class="employee_view">(admin only)</span></a>
+    <a href="customers">Customers<br><span class="employee_view">(admin only)</span></a>
 </div>
 <div class="content">
     <h1 style="text-align: center">Welcome to Shop24</h1>
-    <h3 style="text-align: center"><em>A simplified eCommerce Experience</em></h3>
-    {% if tasks|length < 1 %}
+    <h3 style="text-align: center"><em>A Simplified eCommerce Experience</em></h3>
+    {% if prods|length < 1 %}
     <h4 style="text-align: center">There are no products for sale.<br>(If you're a siteowner or vendor you may add them below)</h4>
     {% else %}
     
@@ -26,17 +28,19 @@
             <th>Added</th>
             <th>Actions</th>
         </tr>
-        {% for task in tasks %}
+        {% for prod in prods %}
             <tr>
-                <td>{{ task.product_name }}</td>
-                <td>{{ task.product_description }}</td>
-                <td>${{(task.product_price)/100 }}</td>
-                <td>{{ task.date_created.date() }}</td> <!--should perhaps not be visible to custoemrs-->
+                <td>{{ prod.product_name }}</td>
+                <td>{{ prod.product_description }}</td>
+                <td>${{(prod.product_price)/100 }}</td>
+                <td>{{ prod.date_created.date() }}</td>
                 <td>
-                    <a href="/delete/{{task.id}}">Delete</a>
+                    <a href="/delete/{{prod.id}}">Delete</a>
                     <br>
-                    <a href="/update/{{task.id}}">Update</a>
-                </td> <!--should perhaps not be visible to custoemrs-->
+                    <a href="/update/{{prod.id}}">Update</a>
+                    <br>
+                    <a href="/order/{{prod.id}}">Order</a>
+                </td>
             </tr>
         {% endfor %}
     </table>
@@ -47,7 +51,8 @@
             <h4>Add Product by completing the form below</h4>
             <input type="text" name="product_name" id="content" placeholder="Product name">
             <input type="text" name="product_description" id="content" placeholder="Description of product">
-            <input type="text" name="product_price" id="content"placeholder="Price of product"><br>
+            <input type="text" name="product_price" id="content"placeholder="Price of product">
+            <input type="text" name="product_quantity" id="content"placeholder="Quantity available for sale"><br>
             <input type="submit" value="Add Product">
         </form>
     </div>

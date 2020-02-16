@@ -4,6 +4,11 @@ body, html {
     background-color: #333;
 }
 
+.employee_view {
+    font-size: small;
+    color: #555;
+}
+
 .topnav {
     overflow: hidden;
     background-color: #333;
