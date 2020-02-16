@@ -12,6 +12,7 @@
     <a href="profile.html">Profile</a>
     <a href="contact.html">Contact</a>
     <a href="orders.html">Orders<span class="employee_view">(admin only)</span></a>
+    <a href="{{ url_for('logout') }}">Logout</a>
     <a class="active" href="customers.html">Customers</a>
 </div>
 <div class="content">
@@ -20,7 +21,7 @@
     {% if results|length < 1 %}
     <h4 style="text-align: center">There are no products for sale.<br>(If you're a siteowner or vendor you may add them below)</h4>
     {% else %}
-    
+
     <table>
         <tr>
             <th>first_name</th>
