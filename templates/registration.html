@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Shop24!</title>
+{% endblock %}
+
+{% block body %}
+<div class="topnav">
+    <a class="active" href="/">Products</a>
+    <a href="{{ url_for('vendors') }}">Vendors</a>
+    <a href="{{ url_for('orders') }}">Orders<span class="employee_view">(admin only)</span></a>
+    <a href="{{ url_for('customers') }}">Customers</a>
+    <a href="{{ url_for('contact') }}">Contact</a>
+</div>
+
+    <h1>Registration</h1>
+    <div class="form">
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+            <div class="container">
+                <p>
+                    {{ form.username(placeholder="Username") }}
+                </p>
+                <p>
+                    {{ form.password(placeholder="Password") }}
+                </p>
+                <p>
+                    {{ form.email(placeholder="Email") }}
+                </p>
+                </div>
+            <p>{{ form.submit() }}</p>
+        </form>
+    </div>
+{% endblock %}
