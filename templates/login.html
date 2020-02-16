@@ -7,9 +7,10 @@
 {% block body %}
 <div class="topnav">
     <a class="active" href="/">Products</a>
-    <a href="vendors">Vendors</a>
-    <a href="orders">Orders</a>
-    <a href="contact.html">Contact</a>
+    <a href="{{ url_for('vendors') }}">Vendors</a>
+    <a href="{{ url_for('orders') }}">Orders<span class="employee_view">(admin only)</span></a>
+    <a href="{{ url_for('customers') }}">Customers</a>
+    <a href="{{ url_for('contact') }}">Contact</a>
 </div>
 
     <h1>Sign In</h1>

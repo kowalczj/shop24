@@ -7,11 +7,12 @@
 {% block body %}
 <div class="topnav">
     <a href="/">Products</a>
-    <a href="vendors.html">Vendors</a>
-    <a href="profile.html">Profile</a>
-    <a class="active" href="contact.html">Contact</a>
-    <a href="orders.html">Orders<span class="employee_view">(admin only)</span></a>
-    <a href="customers.html">Customers</a>
+    <a href="{{ url_for('vendors') }}">Vendors</a>
+    <a href="{{ url_for('orders') }}">Orders<span class="employee_view">(admin only)</span></a>
+    <a href="{{ url_for('customers') }}">Customers</a>
+    <a href="{{ url_for('profile') }}">Profile</a>
+    <a class="active" href="{{ url_for('contact') }}">Contact</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
 </div>
 <div class="content">
     <h1 style="text-align: center">We're grateful you shopped with us.</h1>
@@ -29,6 +30,6 @@
             </tr>
         </table>
     </div>
-    
+
 </div>
 {% endblock %}
