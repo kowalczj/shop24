@@ -17,44 +17,9 @@
 </div>
 <div class="content">
     <h1 style="text-align: center">Vendor Page</h1>
-    <h3 style="text-align: center"><em>A simplified eCommerce Experience</em></h3>
-    {% if tasks|length < 1 %}
-    <h4 style="text-align: center">There are no products for sale.<br>(If you're a siteowner or vendor you may add them below)</h4>
-    {% else %}
-
-    <table>
-        <tr>
-            <th>Product</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Added</th>
-            <th>Actions</th>
-        </tr>
-        {% for task in tasks %}
-            <tr>
-                <td>{{ task.product_name }}</td>
-                <td>{{ task.product_description }}</td>
-                <td>${{(task.product_price)/100 }}</td>
-                <td>{{ task.date_created.date() }}</td> <!--should perhaps not be visible to custoemrs-->
-                <td>
-                    <a href="/delete/{{task.id}}">Delete</a>
-                    <br>
-                    <a href="/update/{{task.id}}">Update</a>
-                </td> <!--should perhaps not be visible to custoemrs-->
-            </tr>
-        {% endfor %}
-    </table>
-    {% endif %}
-
-    <div class="form">
-        <form action="/" method="POST">
-            <h4>Add Product by completing the form below</h4>
-            <input type="text" name="product_name" id="product_name" placeholder="Product name">
-            <input type="text" name="product_description" id="content" placeholder="Description of product">
-            <input type="text" name="product_price" id="content"placeholder="Price of product"><br>
-            <input type="submit" name="new_product_submit" value="Add Product">
-        </form>
+    <div class="content">
+        <h1 style="text-align: center">Your Shop24 Profile</h1>
+        <h3 style="text-align: center"><em>This page has not been created yet</em></h3>
     </div>
 </div>
-
 {% endblock %}
