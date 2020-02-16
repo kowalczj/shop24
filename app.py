@@ -58,6 +58,31 @@ def index():
         tasks = Todo.query.order_by(Todo.date_created).all()
         return render_template("index.html", tasks = tasks)
 
+@app.route('/customers', methods=['POST', 'GET'])
+def customers():
+
+    customers = Customer.query.all()
+
+    if request.method == 'GET':
+
+        return render_template('customers.html', results = customers)       
+
+    elif request.method == 'POST':
+    
+        customer = Customer(first_name     = request.form['first_name'], 
+                            last_name      = request.form['last_name'],
+                            email          = request.form['email'],
+                            phone          = request.form['phone'], 
+                            street_addr    = request.form['street_addr'],
+                            state          = request.form['state'],
+                            zipcode        = request.form['zipcode']
+                            city           = request.form['city'])
+
+        db.session.add(customer)
+        db.session.commit()
+        
+        return render_template('customers.html', results = customers)  
+
 @app.route('/delete/<int:id>')
 def delete(id):
     task_to_delete = Todo.query.get_or_404(id)
