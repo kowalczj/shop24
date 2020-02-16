@@ -92,6 +92,18 @@ def vendors():
     return render_template("vendors.html")
 
 
+@app.route("/profile")
+def profile():
+    return render_template("profile.html")
+
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+
+@app.route("/orders")
+def orders():
+    return render_template("orders.html")
+
 
 if __name__ == "__main__":
     # app.run(host="0.0.0.0", port=8080)   # This didn't work for me, so I set it to the line under
