@@ -34,7 +34,7 @@
                 <td>{{ task.account_id }}</td>
                 <td>{{ task.order_date }}</td>
                 <td>
-                    <form action="/orderproduct" method="post">
+                    <form action="/orderproduct" method="GET">
                         <input type="hidden" name="id" value="{{task.id}}">
                         <button type="submit">View</button>
                     </form>

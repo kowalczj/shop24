@@ -173,9 +173,52 @@ def ordersUpdate(id):
 
 @app.route("/orderproduct", methods=['POST', 'GET'])
 def orderproduct():
-    orderId = request.form['id']
-    tasks = OrderProduct.query.filter(OrderProduct.id == orderId).order_by(OrderProduct.id).all()
-    return render_template("orderproduct.html", tasks = tasks)
+    if request.method == 'POST':
+        if 'order_id' in request.form:
+            
+            orderID = request.form['order_id']
+            productID = request.form['product_id']
+            quantity = request.form['quantity']
+            url = '/orderproduct?id=' + str(orderID)
+
+            newOrderProduct = OrderProduct(
+                order_id=orderID,
+                product_id=productID,
+                quantity=quantity,
+            )
+            
+            try:
+                db.session.add(newOrderProduct)
+                db.session.commit()
+                # return render_template('orderproduct.html')
+                return redirect(url)
+            except Exception as ex:
+                print("Error: ", ex)
+                return "Error: There was a problem adding the new order data"
+        elif 'id' in request.form:
+            
+            orderID = request.form['id']
+            tasks = OrderProduct.query.filter(OrderProduct.order_id == orderID).order_by(OrderProduct.id).all()
+            return render_template("orderproduct.html",tasks=tasks, orderID = orderID)
+    elif request.method == 'GET':
+        orderID = request.args['id']
+        tasks = OrderProduct.query.filter(OrderProduct.order_id == orderID).order_by(OrderProduct.id).all()
+        return render_template("orderproduct.html",tasks=tasks, orderID = orderID)
+
+
+@app.route('/orderproduct/delete/<int:orderID>/<int:id>')
+def orderProductDelete(orderID, id):
+    print("id: ", id)
+    url = '/orderproduct?id=' + str(orderID)
+    print("url: ", url)
+    task_to_delete = OrderProduct.query.get_or_404(id)
+    print("task_to_delete: ", task_to_delete)
+    try:
+        db.session.delete(task_to_delete)
+        db.session.commit()
+        return redirect(url)
+    except:
+        return 'There was a problem deleting that task'
 
 
 if __name__ == "__main__":
