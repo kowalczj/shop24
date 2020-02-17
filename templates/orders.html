@@ -1,41 +1,61 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Shop24 Orders</title>
+<title>Shop24!</title>
 {% endblock %}
 
 {% block body %}
 <div class="topnav">
     <a href="/">Products</a>
     <a href="vendors">Vendors</a>
-    <a href="profile">Profile</a>
-    <a href="contact">Contact</a>
-    <a class="active" href="orders">Orders<br><span class="employee_view">(admin only)</span></a>
-    <a href="customers">Customers<br><span class="employee_view">(admin only)</span></a>
+    <a class="active" href="orders">Orders</a>
+    <a href="make_model.html">Contact</a>
 </div>
 <div class="content">
-    <h1 style="text-align: center">Welcome to Shop24</h1>
-    <h3 style="text-align: center"><em>A Simplified eCommerce Experience</em></h3>
-    {% if ords|length < 1 %}
-    <h4 style="text-align: center">No orders have been placed yet.</h4>
+    <h1 style="text-align: center">Orders</h1>
+    <h3 style="text-align: center"><em>A simplified eCommerce Experience</em></h3>
+    {% if tasks|length < 1 %}
+    <h4 style="text-align: center">There are no products for sale.<br>(If you're a siteowner or vendor you may add them below)</h4>
     {% else %}
     
     <table>
         <tr>
-            <th>Order ID</th>
-            <th>Product ID</th>
-            <th>Name</th>
-            <th>Priority</th>
+            <th>Shipment Priority</th>
+            <th>Order #</th>
+            <th>Account ID</th>
+            <th>Order Date</th>
+            <th>Order Detail</th>
+            <th>Actions</th>
         </tr>
-        {% for ord in ords %}
+        {% for task in tasks %}
             <tr>
-                <td>{{ ord.id }}</td>
-                <td>{{ ord.product_id }}</td>
-                <td>{{ ord.order_name }}</td>
-                <td>{{ ord.is_priority }}</td>
+                <td>{{ task.shipment_priority }}</td>
+                <td>{{ task.id }}</td>
+                <td>{{ task.account_id }}</td>
+                <td>{{ task.order_date }}</td>
+                <td>
+                    <form action="/orderproduct" method="GET">
+                        <input type="hidden" name="id" value="{{task.id}}">
+                        <button type="submit">View</button>
+                    </form>
+                </td>
+                <td>
+                    <a href="/orders/delete/{{task.id}}">Delete</a>
+                    <br>
+                    <a href="/orders/update/{{task.id}}">Update</a>
+                </td> <!--should perhaps not be visible to custoemrs-->
             </tr>
         {% endfor %}
     </table>
     {% endif %}
+
+    <div class="form">
+        <form action="/orders" method="POST">
+            <h4>Add an order by completing the form below</h4>
+            <input type="number" name="account_id" id="content" placeholder="Account ID">
+            <input type="number" name="shipment_priority" id="content" placeholder="Shipment Priority">
+            <input type="submit" value="Add Product">
+        </form>
+    </div>
 </div>
 {% endblock %}

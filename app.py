@@ -7,40 +7,49 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 db = SQLAlchemy(app)
 
-class ProductTable(db.Model):
+class Account(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(200), nullable=False)
+    password = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(200), nullable=False)
+    street = db.Column(db.String(200), nullable=False)
+    city = db.Column(db.String(200), nullable=False)
+
+    def __repr__(self):
+        return '<Task %r>' % self.id
+
+
+class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_name = db.Column(db.String(200), nullable=False)
     product_description = db.Column(db.String(200), nullable=False)
     product_price = db.Column(db.Float(10), nullable=False)
-    product_quantity = db.Column(db.Integer, nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
-    
-    def __repr__(self):
-        return '<Product %r>' % self.id
-
-class OrderTable(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    product_id = db.Column(db.Integer, db.ForeignKey('product_table.id'), nullable=False)
-    order_name = db.Column(db.String(200), nullable=False)
-    is_priority = db.Column(db.Boolean, nullable=True)
 
     def __repr__(self):
-        return '<Order %r>' % self.id
+        return '<Task %r>' % self.id
 
-class Customer(db.Model):
-    id           = db.Column(db.Integer, primary_key=True)
-    first_name   = db.Column(db.String(50), nullable=False)
-    last_name	 = db.Column(db.String(50), nullable=False)
-    email	 = db.Column(db.String(100), nullable=False)
-    phone        = db.Column(db.String(10), nullable=True)
-    street_addr  = db.Column(db.String(50), nullable=True)
-    state        = db.Column(db.String(2), nullable=True)
-    zipcode      = db.Column(db.String(5), nullable=True)
-    city         = db.Column(db.String(100), nullable=True)
+
+class Order(db.Model):
+    id =                  db.Column(db.Integer, primary_key=True)
+    account_id =          db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
+    order_date =          db.Column(db.DateTime, default=datetime.utcnow)
+    shipment_priority =   db.Column(db.Integer)
 
     def __repr__(self):
+        return '<Task %r>' % self.id
 
-        return '<Customer {}>'.format(self.id)
+
+class OrderProduct(db.Model):
+    id =           db.Column(db.Integer, primary_key=True)
+    order_id =     db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)
+    product_id =   db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    quantity =     db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return '<Task %r>' % self.id
+
+
 
 @app.route("/", methods=['POST', 'GET'])
 def index():
@@ -48,14 +57,18 @@ def index():
         name = request.form['product_name']
         description = request.form['product_description']
         price = request.form['product_price']
-        quantity = request.form['product_quantity']
 
-        new_product = ProductTable(
+        new_product = Product(
             product_name=name,
             product_description=description,
-            product_price=price,
-            product_quantity=quantity
+            product_price=price
         )
+
+        print("Product data:")
+        print(new_product.id)
+        print(new_product.product_name)
+        print(new_product.product_description)
+        print(new_product.product_price)
 
         try:
             db.session.add(new_product)
@@ -64,103 +77,150 @@ def index():
         except:
             return "Error: There was a problem adding the new product data"
     else:
-        prods = ProductTable.query.order_by(ProductTable.date_created).all()
-        return render_template("index.html", prods = prods)
-
-@app.route('/customers', methods=['POST', 'GET'])
-def customers():
-
-    customers = Customer.query.all()
-
-    if request.method == 'GET':
-
-        return render_template('customers.html', results = customers)       
-
-    elif request.method == 'POST':
-    
-        customer = Customer(first_name     = request.form['first_name'], 
-                            last_name      = request.form['last_name'],
-                            email          = request.form['email'],
-                            phone          = request.form['phone'], 
-                            street_addr    = request.form['street_adr'],
-                            state          = request.form['state'],
-                            zipcode        = request.form['zipcode'],
-                            city           = request.form['city'])
-
-        db.session.add(customer)
-        db.session.commit()
-        
-        return render_template('customers.html', results = customers)  
+        tasks = Product.query.order_by(Product.date_created).all()
+        return render_template("index.html", tasks = tasks)
 
 @app.route('/delete/<int:id>')
 def delete(id):
-    prod_to_delete = ProductTable.query.get_or_404(id)
+    task_to_delete = Product.query.get_or_404(id)
 
     try:
-        db.session.delete(prod_to_delete)
+        db.session.delete(task_to_delete)
         db.session.commit()
         return redirect('/')
     except:
-        return 'There was a problem deleting that product'
-
-@app.route('/order/<int:id>', methods=['GET', 'POST'])
-def order(id):
-    prod_to_order = ProductTable.query.get_or_404(id)
-    priority = request.form.get('order_priority')
-    is_checked = False
-    if request.method == 'POST':
-        if priority is not None:
-            is_checked = True
-        new_order = OrderTable(
-            product_id=prod_to_order.id,
-            order_name=prod_to_order.product_name,
-            is_priority=is_checked
-        )
-        try:
-            db.session.add(new_order)
-            db.session.commit()
-            ords = OrderTable.query.order_by(OrderTable.is_priority.desc()).all()
-            return render_template('orders.html', ords=ords)
-        except:
-            return 'There was a problem ordering that product'
-    else:
-        return render_template('order.html', ord=prod_to_order)
+        return 'There was a problem deleting that task'
 
 @app.route('/update/<int:id>', methods=['GET', 'POST'])
 def update(id):
-    product = ProductTable.query.get_or_404(id)
+    product = Product.query.get_or_404(id)
 
     if request.method == 'POST':
         product.product_name = request.form['product_name']
         product.product_description = request.form['product_description']
         product.product_price = request.form['product_price']
-        product.product_quantity = request.form['product_quantity']
 
         try:
             db.session.commit()
             return redirect('/')
         except:
-            return 'There was an issue updating your product'
+            return 'There was an issue updating your task'
 
     else:
-        return render_template('update.html', prod=product)
+        return render_template('update.html', task=product)
 
 @app.route("/vendors")
 def vendors():
     return render_template("vendors.html")
 
-@app.route("/profile")
-def profile():
-    return render_template("profile.html")
 
-@app.route("/contact")
-def contact():
-    return render_template("contact.html")
-
-@app.route("/orders")
+@app.route("/orders", methods=['POST', 'GET'])
 def orders():
-    ords = OrderTable.query.order_by(OrderTable.is_priority.desc()).all()
-    return render_template('orders.html', ords=ords)
+    if request.method == 'POST':
+        accountID = request.form['account_id']
+        shipmentPriority = request.form['shipment_priority']
+
+        new_order = Order(
+            account_id=accountID,
+            shipment_priority=shipmentPriority,
+        )
+        
+
+        try:
+            db.session.add(new_order)
+            db.session.commit()
+            return redirect('/orders')
+        except Exception as ex:
+            print("Error: ", ex)
+            return "Error: There was a problem adding the new order data"
+    else:
+        tasks = Order.query.order_by(Order.shipment_priority).all()
+        return render_template("orders.html", tasks = tasks)
+
+
+@app.route('/orders/delete/<int:id>')
+def ordersDelete(id):
+    task_to_delete = Order.query.get_or_404(id)
+
+    try:
+        db.session.delete(task_to_delete)
+        db.session.commit()
+        return redirect('/orders')
+    except:
+        return 'There was a problem deleting that task'
+
+@app.route('/orders/update/<int:id>', methods=['GET', 'POST'])
+def ordersUpdate(id):
+    order = Order.query.get_or_404(id)
+
+    if request.method == 'POST':
+        order.account_id = request.form['account_id']
+        order.shipment_priority = request.form['shipment_priority']
+
+        print("order: ", order.account_id)
+        print("order: ", order.shipment_priority)
+
+        try:
+            db.session.commit()
+            return redirect('/orders')
+        except Exception as e:
+            print(e)
+            return 'There was an issue updating your task'
+
+    else:
+        return render_template('updateOrder.html', task=order)
+
+
+@app.route("/orderproduct", methods=['POST', 'GET'])
+def orderproduct():
+    if request.method == 'POST':
+        if 'order_id' in request.form:
+            
+            orderID = request.form['order_id']
+            productID = request.form['product_id']
+            quantity = request.form['quantity']
+            url = '/orderproduct?id=' + str(orderID)
+
+            newOrderProduct = OrderProduct(
+                order_id=orderID,
+                product_id=productID,
+                quantity=quantity,
+            )
+            
+            try:
+                db.session.add(newOrderProduct)
+                db.session.commit()
+                # return render_template('orderproduct.html')
+                return redirect(url)
+            except Exception as ex:
+                print("Error: ", ex)
+                return "Error: There was a problem adding the new order data"
+        elif 'id' in request.form:
+            
+            orderID = request.form['id']
+            tasks = OrderProduct.query.filter(OrderProduct.order_id == orderID).order_by(OrderProduct.id).all()
+            return render_template("orderproduct.html",tasks=tasks, orderID = orderID)
+    elif request.method == 'GET':
+        orderID = request.args['id']
+        tasks = OrderProduct.query.filter(OrderProduct.order_id == orderID).order_by(OrderProduct.id).all()
+        return render_template("orderproduct.html",tasks=tasks, orderID = orderID)
+
+
+@app.route('/orderproduct/delete/<int:orderID>/<int:id>')
+def orderProductDelete(orderID, id):
+    print("id: ", id)
+    url = '/orderproduct?id=' + str(orderID)
+    print("url: ", url)
+    task_to_delete = OrderProduct.query.get_or_404(id)
+    print("task_to_delete: ", task_to_delete)
+    try:
+        db.session.delete(task_to_delete)
+        db.session.commit()
+        return redirect(url)
+    except:
+        return 'There was a problem deleting that task'
+
 
 if __name__ == "__main__":
+    # app.run(host="0.0.0.0", port=8080)   # This didn't work for me, so I set it to the line under
     app.run(debug=True)
