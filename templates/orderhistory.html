@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Shop24!</title>
+{% endblock %}
+
+{% block body %}
+<div class="topnav">
+    <a href="/">Products</a>
+    <a href="vendors">Vendors</a>
+    <a class="active" href="orders">Orders</a>
+    <a href="contact">Contact</a>
+</div>
+<div class="content">
+    <h1 style="text-align: center">Order History</h1>
+    <h3 style="text-align: center"><em>A simplified eCommerce Experience</em></h3>
+
+    <div class="form">
+        <form action="/orderhistory" method="POST">
+            <h4>Add an order by completing the form below</h4>
+            <input type="number" name="searched_account_id" id="content" placeholder="Your Account ID">
+            <input type="submit" value="View History">
+        </form>
+    </div>
+</div>
+{% endblock %}

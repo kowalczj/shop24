@@ -49,8 +49,6 @@ class OrderProduct(db.Model):
     def __repr__(self):
         return '<Task %r>' % self.id
 
-
-
 @app.route("/", methods=['POST', 'GET'])
 def index():
     if request.method == 'POST':
@@ -220,6 +218,18 @@ def orderProductDelete(orderID, id):
     except:
         return 'There was a problem deleting that task'
 
+@app.route('/orderhistory', methods=['POST', 'GET'])
+def orderHistory():
+    if request.method == 'POST':
+        accountID = request.form['searched_account_id']
+        tasks = Order.query.filter(Order.account_id == accountID).order_by(Order.shipment_priority).all()        
+        try:
+            return render_template('orderhistorydetails.html', tasks=tasks)
+        except Exception as ex:
+            print("Error: ", ex)
+            return "Error: There was a problem viewing the order history"
+    else:
+        return render_template('orderhistory.html')
 
 if __name__ == "__main__":
     # app.run(host="0.0.0.0", port=8080)   # This didn't work for me, so I set it to the line under

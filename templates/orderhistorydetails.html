@@ -25,7 +25,6 @@
             <th>Account ID</th>
             <th>Order Date</th>
             <th>Order Detail</th>
-            <th>Actions</th>
         </tr>
         {% for task in tasks %}
             <tr>
@@ -39,24 +38,10 @@
                         <button type="submit">View</button>
                     </form>
                 </td>
-                <td>
-                    <a href="/orders/delete/{{task.id}}">Delete</a>
-                    <br>
-                    <a href="/orders/update/{{task.id}}">Update</a>
-                </td> <!--should perhaps not be visible to custoemrs-->
             </tr>
         {% endfor %}
     </table>
     {% endif %}
 
-    <div class="form">
-        <form action="/orders" method="POST">
-            <h4>Add an order by completing the form below</h4>
-            <input type="number" name="account_id" id="content" placeholder="Account ID">
-            <input type="number" name="shipment_priority" id="content" placeholder="Shipment Priority">
-            <input type="submit" value="Add Product">
-        </form>
-    </div>
-    <a href="orderhistory" style="font-size: 10pt;">order history</a>
 </div>
 {% endblock %}
