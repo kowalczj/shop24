@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Shop24!</title>
+{% endblock %}
+
+{% block body %}
+<div class="topnav">
+    <a href="/">Products</a>
+    <a href="vendors">Vendors</a>
+    <a class="active" href="orders">Orders</a>
+    <a href="contact">Contact</a>
+</div>
+<div class="content">
+    <h1 style="text-align: center">Orders</h1>
+    <h3 style="text-align: center"><em>A simplified eCommerce Experience</em></h3>
+    {% if tasks|length < 1 %}
+    <h4 style="text-align: center">There are no products for sale.<br>(If you're a siteowner or vendor you may add them below)</h4>
+    {% else %}
+    
+    <table>
+        <tr>
+            <th>Shipment Priority</th>
+            <th>Order #</th>
+            <th>Account ID</th>
+            <th>Order Date</th>
+            <th>Order Detail</th>
+        </tr>
+        {% for task in tasks %}
+            <tr>
+                <td>{{ task.shipment_priority }}</td>
+                <td>{{ task.id }}</td>
+                <td>{{ task.account_id }}</td>
+                <td>{{ task.order_date }}</td>
+                <td>
+                    <form action="/orderproduct" method="GET">
+                        <input type="hidden" name="id" value="{{task.id}}">
+                        <button type="submit">View</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+</div>
+{% endblock %}
