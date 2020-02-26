@@ -7,6 +7,7 @@
 {% block body %}
 <div class="topnav">
     <a href="/">Products</a>
+<<<<<<< HEAD
     <a href="{{ url_for('vendors') }}">Vendors</a>
     <a class="active" href="{{ url_for('orders') }}">Orders<span class="employee_view">(admin only)</span></a>
     <a href="{{ url_for('customers') }}">Customers</a>
@@ -27,10 +28,31 @@
             <th>Description</th>
             <th>Price</th>
             <th>Added</th>
+=======
+    <a href="vendors">Vendors</a>
+    <a class="active" href="orders">Orders</a>
+    <a href="make_model.html">Contact</a>
+</div>
+<div class="content">
+    <h1 style="text-align: center">Orders</h1>
+    <h3 style="text-align: center"><em>A simplified eCommerce Experience</em></h3>
+    {% if tasks|length < 1 %}
+    <h4 style="text-align: center">There are no products for sale.<br>(If you're a siteowner or vendor you may add them below)</h4>
+    {% else %}
+    
+    <table>
+        <tr>
+            <th>Shipment Priority</th>
+            <th>Order #</th>
+            <th>Account ID</th>
+            <th>Order Date</th>
+            <th>Order Detail</th>
+>>>>>>> issue09
             <th>Actions</th>
         </tr>
         {% for task in tasks %}
             <tr>
+<<<<<<< HEAD
                 <td>{{ task.product_name }}</td>
                 <td>{{ task.product_description }}</td>
                 <td>${{(task.product_price)/100 }}</td>
@@ -40,19 +62,47 @@
                     <br>
                     <a href="/update/{{task.id}}">Update</a>
                 </td>
+=======
+                <td>{{ task.shipment_priority }}</td>
+                <td>{{ task.id }}</td>
+                <td>{{ task.account_id }}</td>
+                <td>{{ task.order_date }}</td>
+                <td>
+                    <form action="/order_product" method="GET">
+                        <input type="hidden" name="id" value="{{task.id}}">
+                        <button type="submit">View</button>
+                    </form>
+                </td>
+                <td>
+                    <a href="/orders/delete/{{task.id}}">Delete</a>
+                    <br>
+                    <a href="/orders/update/{{task.id}}">Update</a>
+                </td> <!--should perhaps not be visible to custoemrs-->
+>>>>>>> issue09
             </tr>
         {% endfor %}
     </table>
     {% endif %}
 
     <div class="form">
+<<<<<<< HEAD
         <form action="/" method="POST">
             <h4>Add Product by completing the form below</h4>
             <input type="text" name="product_name" id="content" placeholder="Product name">
             <input type="text" name="product_description" id="content" placeholder="Description of product">
             <input type="text" name="product_price" id="content"placeholder="Price of product"><br>
+=======
+        <form action="/orders" method="POST">
+            <h4>Add an order by completing the form below</h4>
+            <input type="number" name="account_id" id="content" placeholder="Account ID">
+            <input type="number" name="shipment_priority" id="content" placeholder="Shipment Priority">
+>>>>>>> issue09
             <input type="submit" value="Add Product">
         </form>
     </div>
 </div>
+<<<<<<< HEAD
 {% endblock %}
+=======
+{% endblock %}
+>>>>>>> issue09
