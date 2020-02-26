@@ -8,34 +8,20 @@
 
 <div class="topnav">
     <a href="/">Products</a>
-<<<<<<< HEAD
     <a href="{{ url_for('vendors') }}">Vendors</a>
     <a href="{{ url_for('orders') }}">Orders<span class="employee_view">(admin only)</span></a>
     <a class="active" href="{{ url_for('customers') }}">Customers</a>
     <a href="{{ url_for('profile') }}">Profile</a>
     <a href="{{ url_for('contact') }}">Contact</a>
     <a href="{{ url_for('logout') }}">Logout</a>
-=======
-    <a href="vendors">Vendors</a>
-    <a href="profile">Profile</a>
-    <a href="contact">Contact</a>
-    <a href="orders">Orders<br><span class="employee_view">(admin only)</span></a>
-    <a class="active" href="customers">Customers<br><span class="employee_view">(admin only)</span></a>
->>>>>>> issue09
 </div>
 <div class="content">
     <h1 style="text-align: center">Cusomter Page</h1>
     <h3 style="text-align: center"><em>A simplified eCommerce Experience</em></h3>
     {% if results|length < 1 %}
-<<<<<<< HEAD
     <h4 style="text-align: center">There are no products for sale.<br>(If you're a siteowner or vendor you may add them below)</h4>
     {% else %}
 
-=======
-    <h4 style="text-align: center">There are no products for sale.</h4>
-    {% else %}
-    
->>>>>>> issue09
     <table>
         <tr>
             <th>first_name</th>
@@ -53,11 +39,7 @@
                 <td>{{ r.last_name}}</td>
                 <td>{{ r.email}}</td>
                 <td>{{ r.phone}}</td>
-<<<<<<< HEAD
                 <td>{{ r.street_adr}}</td>
-=======
-                <td>{{ r.street_addr}}</td>
->>>>>>> issue09
                 <td>{{ r.state}}</td>
                 <td>{{ r.zipcode}}</td>
                 <td>{{ r.city}}</td>

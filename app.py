@@ -47,7 +47,6 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
 
-<<<<<<< HEAD
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30), unique=True)
@@ -59,15 +58,6 @@ class User(UserMixin, db.Model):
 
     def checkPW(self, password):
         return check_password_hash(self.password_hash, password)
-=======
-class Account(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(200), nullable=False)
-    password = db.Column(db.String(200), nullable=False)
-    email = db.Column(db.String(200), nullable=False)
-    street = db.Column(db.String(200), nullable=False)
-    city = db.Column(db.String(200), nullable=False)
->>>>>>> issue09
 
     def __repr__(self):
         return '<Task %r>' % self.id
@@ -86,11 +76,7 @@ class Product(db.Model):
 
 class Order(db.Model):
     id =                  db.Column(db.Integer, primary_key=True)
-<<<<<<< HEAD
     customer_id =          db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
-=======
-    account_id =          db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
->>>>>>> issue09
     order_date =          db.Column(db.DateTime, default=datetime.utcnow)
     shipment_priority =   db.Column(db.Integer)
 
@@ -107,7 +93,6 @@ class OrderProduct(db.Model):
     def __repr__(self):
         return '<Task %r>' % self.id
 
-<<<<<<< HEAD
 class Customer(db.Model):
     id           = db.Column(db.Integer, primary_key=True)
     first_name   = db.Column(db.String(50), nullable=False)
@@ -157,8 +142,6 @@ def logout():
     logout_user()
     print('You are now logged out!')
     return redirect(url_for('login'))
-=======
->>>>>>> issue09
 
 
 @app.route("/", methods=['POST', 'GET'])
@@ -174,12 +157,6 @@ def index():
             product_description=description,
             product_price=price
         )
-
-        print("Product data:")
-        print(new_product.id)
-        print(new_product.product_name)
-        print(new_product.product_description)
-        print(new_product.product_price)
 
         try:
             db.session.add(new_product)
@@ -314,7 +291,6 @@ def vendors():
     return render_template("vendors.html")
 
 
-<<<<<<< HEAD
 @app.route("/profile")
 @login_required
 def profile():
@@ -324,113 +300,6 @@ def profile():
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
-=======
-@app.route("/orders", methods=['POST', 'GET'])
-def orders():
-    if request.method == 'POST':
-        accountID = request.form['account_id']
-        shipmentPriority = request.form['shipment_priority']
-
-        new_order = Order(
-            account_id=accountID,
-            shipment_priority=shipmentPriority,
-        )
-        
-
-        try:
-            db.session.add(new_order)
-            db.session.commit()
-            return redirect('/orders')
-        except Exception as ex:
-            print("Error: ", ex)
-            return "Error: There was a problem adding the new order data"
-    else:
-        tasks = Order.query.order_by(Order.shipment_priority).all()
-        return render_template("orders.html", tasks = tasks)
-
-
-@app.route('/orders/delete/<int:id>')
-def ordersDelete(id):
-    task_to_delete = Order.query.get_or_404(id)
-
-    try:
-        db.session.delete(task_to_delete)
-        db.session.commit()
-        return redirect('/orders')
-    except:
-        return 'There was a problem deleting that task'
-
-@app.route('/orders/update/<int:id>', methods=['GET', 'POST'])
-def ordersUpdate(id):
-    order = Order.query.get_or_404(id)
-
-    if request.method == 'POST':
-        order.account_id = request.form['account_id']
-        order.shipment_priority = request.form['shipment_priority']
-
-        print("order: ", order.account_id)
-        print("order: ", order.shipment_priority)
-
-        try:
-            db.session.commit()
-            return redirect('/orders')
-        except Exception as e:
-            print(e)
-            return 'There was an issue updating your task'
-
-    else:
-        return render_template('update_order.html', task=order)
-
-
-@app.route("/order_product", methods=['POST', 'GET'])
-def orderproduct():
-    if request.method == 'POST':
-        if 'order_id' in request.form:
-            
-            orderID = request.form['order_id']
-            productID = request.form['product_id']
-            quantity = request.form['quantity']
-            url = '/order_product?id=' + str(orderID)
-
-            newOrderProduct = OrderProduct(
-                order_id=orderID,
-                product_id=productID,
-                quantity=quantity,
-            )
-            
-            try:
-                db.session.add(newOrderProduct)
-                db.session.commit()
-                # return render_template('orderproduct.html')
-                return redirect(url)
-            except Exception as ex:
-                print("Error: ", ex)
-                return "Error: There was a problem adding the new order data"
-        elif 'id' in request.form:
-            
-            orderID = request.form['id']
-            tasks = OrderProduct.query.filter(OrderProduct.order_id == orderID).order_by(OrderProduct.id).all()
-            return render_template("order_product.html",tasks=tasks, orderID = orderID)
-    elif request.method == 'GET':
-        orderID = request.args['id']
-        tasks = OrderProduct.query.filter(OrderProduct.order_id == orderID).order_by(OrderProduct.id).all()
-        return render_template("order_product.html",tasks=tasks, orderID = orderID)
-
-
-@app.route('/order_product/delete/<int:orderID>/<int:id>')
-def orderProductDelete(orderID, id):
-    print("id: ", id)
-    url = '/order_product?id=' + str(orderID)
-    print("url: ", url)
-    task_to_delete = OrderProduct.query.get_or_404(id)
-    print("task_to_delete: ", task_to_delete)
-    try:
-        db.session.delete(task_to_delete)
-        db.session.commit()
-        return redirect(url)
-    except:
-        return 'There was a problem deleting that task'
->>>>>>> issue09
 
 
 if __name__ == "__main__":
