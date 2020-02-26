@@ -168,10 +168,10 @@ def ordersUpdate(id):
             return 'There was an issue updating your task'
 
     else:
-        return render_template('updateOrder.html', task=order)
+        return render_template('update_order.html', task=order)
 
 
-@app.route("/orderproduct", methods=['POST', 'GET'])
+@app.route("/order_product", methods=['POST', 'GET'])
 def orderproduct():
     if request.method == 'POST':
         if 'order_id' in request.form:
@@ -179,7 +179,7 @@ def orderproduct():
             orderID = request.form['order_id']
             productID = request.form['product_id']
             quantity = request.form['quantity']
-            url = '/orderproduct?id=' + str(orderID)
+            url = '/order_product?id=' + str(orderID)
 
             newOrderProduct = OrderProduct(
                 order_id=orderID,
@@ -199,17 +199,17 @@ def orderproduct():
             
             orderID = request.form['id']
             tasks = OrderProduct.query.filter(OrderProduct.order_id == orderID).order_by(OrderProduct.id).all()
-            return render_template("orderproduct.html",tasks=tasks, orderID = orderID)
+            return render_template("order_product.html",tasks=tasks, orderID = orderID)
     elif request.method == 'GET':
         orderID = request.args['id']
         tasks = OrderProduct.query.filter(OrderProduct.order_id == orderID).order_by(OrderProduct.id).all()
-        return render_template("orderproduct.html",tasks=tasks, orderID = orderID)
+        return render_template("order_product.html",tasks=tasks, orderID = orderID)
 
 
-@app.route('/orderproduct/delete/<int:orderID>/<int:id>')
+@app.route('/order_product/delete/<int:orderID>/<int:id>')
 def orderProductDelete(orderID, id):
     print("id: ", id)
-    url = '/orderproduct?id=' + str(orderID)
+    url = '/order_product?id=' + str(orderID)
     print("url: ", url)
     task_to_delete = OrderProduct.query.get_or_404(id)
     print("task_to_delete: ", task_to_delete)
