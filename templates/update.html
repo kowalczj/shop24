@@ -9,10 +9,20 @@
     <h1 style="text-align: center">Update Products</h1>
 
     <div class="form">
-        <form action="/update/{{task.id}}" method="POST">
-            <input type="text" name="product_name" id="content" placeholder="Product name">
-            <input type="text" name="product_description" id="content" placeholder="Description of product">
-            <input type="text" name="product_price" id="content"placeholder="Price of product"><br>
+        <form action="/update/{{product.id}}" method="POST">
+            
+            <label style="color: white">Product Name</label> <br>
+            <input type="text" name="product_name" id="product_name" placeholder="Product name" value="{{ product.product_name }}"> <br><br>
+            
+            <label for="product_description" style="color: white">Product Description</label><br>
+            <input type="text" name="product_description" id="product_description" placeholder="Description of product" value="{{ product.product_description }}"> <br><br>
+            
+            <label for="product_price" style="color: white">Product Price</label><br>
+            <input type="text" name="product_price" id="product_price"placeholder="Price of product" value="{{(product.product_price) /100 }}"><br><br>
+            
+            <label for="category_id" style="color: white">Category ID</label><br>
+            <input type="number" name="category_id" id="category_id"placeholder="Price of product" value="{{ product.category_id }}"><br><br>
+            
             <input type="submit" value="Add Product">
         </form>
     </div>

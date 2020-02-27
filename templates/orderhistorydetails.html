@@ -22,7 +22,7 @@
         <tr>
             <th>Shipment Priority</th>
             <th>Order #</th>
-            <th>Account ID</th>
+            <th>Customer ID</th>
             <th>Order Date</th>
             <th>Order Detail</th>
         </tr>
@@ -30,7 +30,7 @@
             <tr>
                 <td>{{ task.shipment_priority }}</td>
                 <td>{{ task.id }}</td>
-                <td>{{ task.account_id }}</td>
+                <td>{{ task.customer_id }}</td>
                 <td>{{ task.order_date }}</td>
                 <td>
                     <form action="/orderproduct" method="GET">

@@ -73,11 +73,12 @@ class Account(db.Model):
 
 
 class Product(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    product_name = db.Column(db.String(200), nullable=False)
-    product_description = db.Column(db.String(200), nullable=False)
-    product_price = db.Column(db.Float(10), nullable=False)
-    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    id =                    db.Column(db.Integer, primary_key=True)
+    product_name =          db.Column(db.String(200), nullable=False)
+    product_description =   db.Column(db.String(200), nullable=False)
+    product_price =         db.Column(db.Float(10), nullable=False)
+    date_created =          db.Column(db.DateTime, default=datetime.utcnow)
+    category_id =           db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
 
     def __repr__(self):
         return '<Task %r>' % self.id
@@ -115,6 +116,13 @@ class Customer(db.Model):
 
     def __repr__(self):
         return '<Customer {}>'.format(self.id)
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    category_name = db.Column(db.String(200), nullable=False)
+    
+    def __repr__(self):
+        return '<Task %r>' % self.id
 
 
 @app.route('/registration', methods=['GET', 'POST'])
@@ -160,11 +168,13 @@ def index():
         name = request.form['product_name']
         description = request.form['product_description']
         price = request.form['product_price']
+        category = request.form['category_id']
 
         new_product = Product(
             product_name=name,
             product_description=description,
-            product_price=price
+            product_price=price,
+            category_id=category
         )
 
         print("Product data:")
@@ -224,6 +234,7 @@ def update(id):
         product.product_name = request.form['product_name']
         product.product_description = request.form['product_description']
         product.product_price = request.form['product_price']
+        product.category_id = request.form['category_id']
 
         try:
             db.session.commit()
@@ -232,7 +243,7 @@ def update(id):
             return 'There was an issue updating your task'
 
     else:
-        return render_template('update.html', task=product)
+        return render_template('update.html', product=product)
 
 
 @app.route("/orders", methods=['POST', 'GET'])
@@ -383,7 +394,7 @@ def orderProductUpdate(orderID, id):
 def orderHistory():
     if request.method == 'POST':
         accountID = request.form['searched_account_id']
-        tasks = Order.query.filter(Order.account_id == accountID).order_by(Order.shipment_priority).all()        
+        tasks = Order.query.filter(Order.customer_id == accountID).order_by(Order.shipment_priority).all()        
         try:
             return render_template('orderhistorydetails.html', tasks=tasks)
         except Exception as ex:

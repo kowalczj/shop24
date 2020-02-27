@@ -10,8 +10,10 @@
 
     <div class="form">
         <form action="/orders/update/{{task.id}}" method="POST">
-            <input type="number" name="customer_id" placeholder="Customer ID">
-            <input type="number" name="shipment_priority" placeholder="Shipment Priority">
+            <label style="color: white">Customer ID</label> <br>
+            <input type="number" name="customer_id" placeholder="Customer ID" value="{{task.customer_id}}"><br><br>
+            <label style="color: white">Shipment Priority</label> <br>
+            <input type="number" name="shipment_priority" placeholder="Shipment Priority" value="{{task.shipment_priority}}"><br><br>
             <input type="submit" value="Update Order">
         </form>
     </div>
