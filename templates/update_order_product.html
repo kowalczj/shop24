@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Shop24!</title>
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    <h1 style="text-align: center">Update Product</h1>
+    <h1 style="text-align: center; color: red">Currently Non-Functional</h1>
+
+
+    <div class="form">
+        <form action="/order_product/update/{{orderID}}/{{id}}" method="POST">
+            <input type="number" name="product_id" placeholder="Product ID">
+            <input type="number" name="quantity" placeholder="Quantity">
+            <input type="submit" value="Update Order">
+        </form>
+    </div>
+</div>
+{% endblock %}

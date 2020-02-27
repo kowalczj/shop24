@@ -9,7 +9,7 @@ from wtforms.validators import DataRequired, ValidationError, Email
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///shop24.db'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['SECRET_KEY'] = "What is going on"
 db = SQLAlchemy(app)
@@ -47,7 +47,6 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
 
-<<<<<<< HEAD
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30), unique=True)
@@ -59,7 +58,8 @@ class User(UserMixin, db.Model):
 
     def checkPW(self, password):
         return check_password_hash(self.password_hash, password)
-=======
+
+
 class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(200), nullable=False)
@@ -67,7 +67,6 @@ class Account(db.Model):
     email = db.Column(db.String(200), nullable=False)
     street = db.Column(db.String(200), nullable=False)
     city = db.Column(db.String(200), nullable=False)
->>>>>>> issue09
 
     def __repr__(self):
         return '<Task %r>' % self.id
@@ -86,11 +85,7 @@ class Product(db.Model):
 
 class Order(db.Model):
     id =                  db.Column(db.Integer, primary_key=True)
-<<<<<<< HEAD
-    customer_id =          db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
-=======
-    account_id =          db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
->>>>>>> issue09
+    customer_id =          db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
     order_date =          db.Column(db.DateTime, default=datetime.utcnow)
     shipment_priority =   db.Column(db.Integer)
 
@@ -107,7 +102,6 @@ class OrderProduct(db.Model):
     def __repr__(self):
         return '<Task %r>' % self.id
 
-<<<<<<< HEAD
 class Customer(db.Model):
     id           = db.Column(db.Integer, primary_key=True)
     first_name   = db.Column(db.String(50), nullable=False)
@@ -157,8 +151,6 @@ def logout():
     logout_user()
     print('You are now logged out!')
     return redirect(url_for('login'))
-=======
->>>>>>> issue09
 
 
 @app.route("/", methods=['POST', 'GET'])
@@ -298,87 +290,6 @@ def ordersUpdate(id):
             return 'There was an issue updating your task'
 
     else:
-        return render_template('updateOrder.html', task=order)
-
-
-@app.route("/orderproduct", methods=['POST', 'GET'])
-def orderproduct():
-    orderId = request.form['id']
-    tasks = OrderProduct.query.filter(OrderProduct.id == orderId).order_by(OrderProduct.id).all()
-    return render_template("orderproduct.html", tasks = tasks)
-
-
-@app.route("/vendors")
-@login_required
-def vendors():
-    return render_template("vendors.html")
-
-
-<<<<<<< HEAD
-@app.route("/profile")
-@login_required
-def profile():
-    return render_template("profile.html")
-
-
-@app.route("/contact")
-def contact():
-    return render_template("contact.html")
-=======
-@app.route("/orders", methods=['POST', 'GET'])
-def orders():
-    if request.method == 'POST':
-        accountID = request.form['account_id']
-        shipmentPriority = request.form['shipment_priority']
-
-        new_order = Order(
-            account_id=accountID,
-            shipment_priority=shipmentPriority,
-        )
-        
-
-        try:
-            db.session.add(new_order)
-            db.session.commit()
-            return redirect('/orders')
-        except Exception as ex:
-            print("Error: ", ex)
-            return "Error: There was a problem adding the new order data"
-    else:
-        tasks = Order.query.order_by(Order.shipment_priority).all()
-        return render_template("orders.html", tasks = tasks)
-
-
-@app.route('/orders/delete/<int:id>')
-def ordersDelete(id):
-    task_to_delete = Order.query.get_or_404(id)
-
-    try:
-        db.session.delete(task_to_delete)
-        db.session.commit()
-        return redirect('/orders')
-    except:
-        return 'There was a problem deleting that task'
-
-@app.route('/orders/update/<int:id>', methods=['GET', 'POST'])
-def ordersUpdate(id):
-    order = Order.query.get_or_404(id)
-
-    if request.method == 'POST':
-        order.account_id = request.form['account_id']
-        order.shipment_priority = request.form['shipment_priority']
-
-        print("order: ", order.account_id)
-        print("order: ", order.shipment_priority)
-
-        try:
-            db.session.commit()
-            return redirect('/orders')
-        except Exception as e:
-            print(e)
-            return 'There was an issue updating your task'
-
-    else:
         return render_template('update_order.html', task=order)
 
 
@@ -416,6 +327,22 @@ def orderproduct():
         tasks = OrderProduct.query.filter(OrderProduct.order_id == orderID).order_by(OrderProduct.id).all()
         return render_template("order_product.html",tasks=tasks, orderID = orderID)
 
+@app.route("/vendors")
+@login_required
+def vendors():
+    return render_template("vendors.html")
+
+
+@app.route("/profile")
+@login_required
+def profile():
+    return render_template("profile.html")
+
+
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+
 
 @app.route('/order_product/delete/<int:orderID>/<int:id>')
 def orderProductDelete(orderID, id):
@@ -430,7 +357,27 @@ def orderProductDelete(orderID, id):
         return redirect(url)
     except:
         return 'There was a problem deleting that task'
->>>>>>> issue09
+
+@app.route('/order_product/update/<int:orderID>/<int:id>')
+def orderProductUpdate(orderID, id):
+    url = '/order_product?id=' + str(orderID)
+    order_product = OrderProduct.query.get_or_404(id)
+    if request.method == 'POST':
+        order_product.product_id = request.form['product_id']
+        order_product.quantity = request.form['quantity']
+
+        try:
+            db.session.commit()
+            return redirect(url)
+        except Exception as e:
+            print(e)
+            return 'There was an issue updating your task'
+
+    else:
+        url = '/order_product?id=' + str(orderID)
+        order_product = OrderProduct.query.get_or_404(id)
+        return render_template('update_order_product.html', orderID=orderID, id=id)
+
 
 @app.route('/orderhistory', methods=['POST', 'GET'])
 def orderHistory():
