@@ -5,6 +5,16 @@
 {% endblock %}
 
 {% block body %}
+<div class="topnav">
+    <a class="active" href="/">Products</a>
+    <a href="{{ url_for('vendors') }}">Vendors</a>
+    <a href="{{ url_for('orders') }}">Orders<span class="employee_view">(admin only)</span></a>
+    <a href="{{ url_for('customers') }}">Customers</a>
+    <a href="{{ url_for('profile') }}">Profile</a>
+    <a href="{{ url_for('contact') }}">Contact</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+</div>
+
 <div class="content">
     <h1 style="text-align: center">Update Products</h1>
 
@@ -18,11 +28,18 @@
             <input type="text" name="product_description" id="product_description" placeholder="Description of product" value="{{ product.product_description }}"> <br><br>
             
             <label for="product_price" style="color: white">Product Price</label><br>
-            <input type="text" name="product_price" id="product_price"placeholder="Price of product" value="{{(product.product_price) /100 }}"><br><br>
+            <input type="text" name="product_price" id="product_price"placeholder="Price of product" value="{{(product.product_price)}}"><br><br>
             
-            <label for="category_id" style="color: white">Category ID</label><br>
-            <input type="number" name="category_id" id="category_id"placeholder="Price of product" value="{{ product.category_id }}"><br><br>
-            
+            <label for="category_id" style="color: white">Category</label><br>
+            <!-- <input type="number" name="category_id" id="category_id"placeholder="Price of product" value="{{ product.category_id }}"><br><br> -->
+            <select name="category_id" id="">
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.category_name }}</option>
+                {% endfor %}
+            </select>
+
+            <br><br>
+
             <input type="submit" value="Add Product">
         </form>
     </div>

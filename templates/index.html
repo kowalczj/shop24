@@ -8,6 +8,7 @@
 <div class="topnav">
     <a class="active" href="/">Products</a>
     <a href="{{ url_for('vendors') }}">Vendors</a>
+    <a href="{{ url_for('category') }}">Categories</a>
     <a href="{{ url_for('orders') }}">Orders<span class="employee_view">(admin only)</span></a>
     <a href="{{ url_for('customers') }}">Customers</a>
     <a href="{{ url_for('profile') }}">Profile</a>
@@ -34,8 +35,13 @@
             <tr>
                 <td>{{ task.product_name }}</td>
                 <td>{{ task.product_description }}</td>
-                <td>{{ task.category_id }}</td>
-                <td>${{(task.product_price)/100 }}</td>
+                <!-- <td>{{ task.category_id }}</td> -->
+                {% for category in categories %}
+                    {% if category.id == task.category_id %}
+                        <td>{{ category.category_name}}</td>
+                    {% endif %}
+                {% endfor %}
+                <td>${{task.product_price }}</td>
                 <td>{{ task.date_created.date() }}</td> <!--should perhaps not be visible to custoemrs-->
                 <td>
                     <a href="/delete/{{task.id}}">Delete</a>
@@ -52,8 +58,13 @@
             <h4>Add Product by completing the form below</h4>
             <input type="text" name="product_name" id="content" placeholder="Product name">
             <input type="text" name="product_description" id="content" placeholder="Description of product">
-            <input type="text" name="product_price" id="content" placeholder="Price of product"><br>
-            <input type="number" name="category_id" id="content" placeholder="Category ID"><br>
+            <input type="number" name="product_price" id="content" placeholder="Price of product"><br>
+            <!-- <input type="number" name="category_id" id="content" placeholder="Category ID"><br> -->
+            <select name="category_id" id="">
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.category_name }}</option>
+                {% endfor %}
+            </select>
             <input type="submit" value="Add Product">
         </form>
     </div>

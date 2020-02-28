@@ -9,6 +9,7 @@
 <div class="topnav">
     <a href="/">Products</a>
     <a href="{{ url_for('vendors') }}">Vendors</a>
+    <a href="{{ url_for('category') }}">Categories</a>
     <a href="{{ url_for('orders') }}">Orders<span class="employee_view">(admin only)</span></a>
     <a class="active" href="{{ url_for('customers') }}">Customers</a>
     <a href="{{ url_for('profile') }}">Profile</a>
@@ -16,7 +17,7 @@
     <a href="{{ url_for('logout') }}">Logout</a>
 </div>
 <div class="content">
-    <h1 style="text-align: center">Cusomter Page</h1>
+    <h1 style="text-align: center">Customer Page</h1>
     <h3 style="text-align: center"><em>A simplified eCommerce Experience</em></h3>
     {% if results|length < 1 %}
     <h4 style="text-align: center">There are no products for sale.<br>(If you're a siteowner or vendor you may add them below)</h4>
@@ -24,14 +25,14 @@
 
     <table>
         <tr>
-            <th>first_name</th>
-            <th>last_name</th>
-            <th>email</th>
-            <th>phone</th>
-            <th>street_adr</th>
-            <th>state</th>
-            <th>zipcode</th>
-            <th>city</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Street Address</th>
+            <th>State</th>
+            <th>Zip</th>
+            <th>City</th>
         </tr>
         {% for r in results %}
             <tr>

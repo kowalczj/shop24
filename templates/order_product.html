@@ -7,9 +7,12 @@
 {% block body %}
 <div class="topnav">
     <a href="/">Products</a>
-    <a href="/vendors">Vendors</a>
-    <a class="active" href="/orders">Orders</a>
-    <a href="make_model.html">Contact</a>
+    <a href="{{ url_for('vendors') }}">Vendors</a>
+    <a class="active" href="{{ url_for('orders') }}">Orders<span class="employee_view">(admin only)</span></a>
+    <a href="{{ url_for('customers') }}">Customers</a>
+    <a href="{{ url_for('profile') }}">Profile</a>
+    <a href="{{ url_for('contact') }}">Contact</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
 </div>
 
 <div class="content">
@@ -22,15 +25,20 @@
 
     <table>
         <tr>
-            <th>OrderProduct ID</th>
-            <th>Product ID</th>
+            <!-- <th>OrderProduct ID</th> -->
+            <th>Product</th>
             <th>Quantity</th>
             <th>Actions</th>
         </tr>
         {% for task in tasks %}
             <tr>
-                <td>{{ task.id }}</td>
-                <td>{{ task.product_id }}</td>
+                <!-- <td>{{ task.id }}</td> -->
+                {% for product in products %}
+                    {% if product.id == task.product_id %}
+                        <td>{{ product.product_name}}</td>
+                    {% endif %}
+                {% endfor %}
+                <!-- <td>{{ task.product_id }}</td> -->
                 <td>{{ task.quantity }}</td>
                 <td>
                     <a href="/order_product/delete/{{orderID}}/{{task.id}}">Delete</a>
@@ -42,14 +50,23 @@
         {% endfor %}
     </table>
     {% endif %}
+    
 
     
 
     <div class="form">
         <form action="/order_product" method="POST">
-            <h4>Add an product to the current order</h4>
+            <h4>Add a product to the current order</h4>
             <input type="hidden" name="order_id" value="{{ orderID }}">
-            <input type="number" name="product_id" id="content" placeholder="Product ID">
+            <!-- <input type="number" name="product_id" id="content" placeholder="Product ID"> -->
+            
+            <select name="product_id" id="">
+                {% for product in products %}
+                    <option value="{{ product.id }}">{{ product.product_name }}</option>
+                {% endfor %}
+            </select>
+
+
             <input type="number" name="quantity" id="content" placeholder="Quantity">
             <input type="submit" value="Add Product">
         </form>

@@ -76,7 +76,7 @@ class Product(db.Model):
     id =                    db.Column(db.Integer, primary_key=True)
     product_name =          db.Column(db.String(200), nullable=False)
     product_description =   db.Column(db.String(200), nullable=False)
-    product_price =         db.Column(db.Float(10), nullable=False)
+    product_price =         db.Column(db.Numeric(10, 2), nullable=False)
     date_created =          db.Column(db.DateTime, default=datetime.utcnow)
     category_id =           db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
 
@@ -191,7 +191,8 @@ def index():
             return "Error: There was a problem adding the new product data"
     else:
         tasks = Product.query.order_by(Product.date_created).all()
-        return render_template("index.html", tasks = tasks)
+        categories= Category.query.all()
+        return render_template("index.html", tasks = tasks, categories=categories)
 
 
 @app.route('/customers', methods=['POST', 'GET'])
@@ -209,9 +210,14 @@ def customers():
                             state          = request.form['state'],
                             zipcode        = request.form['zipcode'],
                             city           = request.form['city'])
-        db.session.add(customer)
-        db.session.commit()
-        return render_template('customers.html', results = customers)
+        try:
+            db.session.add(customer)
+            db.session.commit()
+            return redirect('/customers')
+        except Exception as ex:
+            print("Error: ", ex)
+            return "Error: There was a problem adding the new customer data"
+        # return render_template('customers.html', results = customers)
 
 
 @app.route('/delete/<int:id>')
@@ -243,7 +249,8 @@ def update(id):
             return 'There was an issue updating your task'
 
     else:
-        return render_template('update.html', product=product)
+        categories= Category.query.all()
+        return render_template('update.html', product=product, categories=categories)
 
 
 @app.route("/orders", methods=['POST', 'GET'])
@@ -267,7 +274,9 @@ def orders():
             return "Error: There was a problem adding the new order data"
     else:
         tasks = Order.query.order_by(Order.shipment_priority).all()
-        return render_template("orders.html", tasks = tasks)
+        products = Product.query.all()
+        customers = Customer.query.all()
+        return render_template("orders.html", tasks = tasks, products=products, customers=customers)
 
 
 @app.route('/orders/delete/<int:id>')
@@ -285,6 +294,7 @@ def ordersDelete(id):
 @app.route('/orders/update/<int:id>', methods=['GET', 'POST'])
 def ordersUpdate(id):
     order = Order.query.get_or_404(id)
+    customers= Customer.query.all()
 
     if request.method == 'POST':
         order.customer_id = request.form['customer_id']
@@ -301,7 +311,8 @@ def ordersUpdate(id):
             return 'There was an issue updating your task'
 
     else:
-        return render_template('update_order.html', task=order)
+        customers= Customer.query.all()
+        return render_template('update_order.html', task=order, customers=customers)
 
 
 @app.route("/order_product", methods=['POST', 'GET'])
@@ -336,7 +347,8 @@ def orderproduct():
     elif request.method == 'GET':
         orderID = request.args['id']
         tasks = OrderProduct.query.filter(OrderProduct.order_id == orderID).order_by(OrderProduct.id).all()
-        return render_template("order_product.html",tasks=tasks, orderID = orderID)
+        products = Product.query.all()
+        return render_template("order_product.html",tasks=tasks, orderID = orderID, products=products)
 
 @app.route("/vendors")
 @login_required
@@ -402,6 +414,56 @@ def orderHistory():
             return "Error: There was a problem viewing the order history"
     else:
         return render_template('orderhistory.html')
+
+@app.route("/category", methods=['POST', 'GET'])
+@login_required
+def category():
+    if request.method == 'POST':
+        category_name = request.form['category_name']
+
+        new_category = Category(
+            category_name=category_name
+        )
+
+        try:
+            db.session.add(new_category)
+            db.session.commit()
+            return redirect('/category')
+        except:
+            return "Error: There was a problem adding the new category"
+    else:
+        categories = Category.query.all()
+        return render_template("category.html", categories=categories)
+
+@app.route('/category/update/<int:id>', methods=['GET', 'POST'])
+def category_update(id):
+    category = Category.query.get_or_404(id)
+
+    if request.method == 'POST':
+        category.category_name = request.form['category_name']
+
+        try:
+            db.session.commit()
+            return redirect('/category')
+        except:
+            return 'There was an issue updating your task'
+
+    else:
+        categories = Category.query.all()
+        return render_template('update_category.html', category=category)
+
+@app.route('/category/delete/<int:id>')
+def category_delete(id):
+    category_to_delete = Category.query.get_or_404(id)
+
+    try:
+        db.session.delete(category_to_delete)
+        db.session.commit()
+        return redirect('/category')
+    except:
+        return 'There was a problem deleting that task'
+
+
 
 if __name__ == "__main__":
     # app.run(host="0.0.0.0", port=8080)   # This didn't work for me, so I set it to the line under

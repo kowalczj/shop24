@@ -8,6 +8,7 @@
 <div class="topnav">
     <a href="/">Products</a>
 <a href="{{ url_for('vendors') }}">Vendors</a>
+<a href="{{ url_for('category') }}">Categories</a>
 <a class="active" href="{{ url_for('orders') }}">Orders<span class="employee_view">(admin only)</span></a>
 <a href="{{ url_for('customers') }}">Customers</a>
 <a href="{{ url_for('profile') }}">Profile</a>
@@ -25,7 +26,7 @@
         <tr>
             <th>Shipment Priority</th>
             <th>Order #</th>
-            <th>Account ID</th>
+            <th>Customer Name</th>
             <th>Order Date</th>
             <th>Order Detail</th>
             <th>Actions</th>
@@ -34,7 +35,12 @@
             <tr>
                 <td>{{ task.shipment_priority }}</td>
                 <td>{{ task.id }}</td>
-                <td>{{ task.customer_id }}</td>
+                <!-- <td>{{ task.customer_id }}</td> -->
+                {% for customer in customers %}
+                    {% if customer.id == task.customer_id %}
+                        <td>{{ customer.first_name}} {{ customer.last_name }}</td>
+                    {% endif %}
+                {% endfor %}
                 <td>{{ task.order_date }}</td>
                 <td>
                     <form action="/order_product" method="GET">
@@ -52,12 +58,20 @@
     </table>
     {% endif %}
 
+    
+
+
     <div class="form">
         <form action="/orders" method="POST">
-            <h4>Add an order by completing the form below</h4>
-            <input type="number" name="customer_id" id="content" placeholder="Customer ID">
+            <h4>Add an order by completing the form below. Existing customers are needed to place an order.</h4>
+            <select name="customer_id" id="">
+                {% for customer in customers %}
+                    <option value="{{ customer.id }}">{{ customer.first_name}} {{ customer.last_name }}</option>
+                {% endfor %}
+            </select>
             <input type="number" name="shipment_priority" id="content" placeholder="Shipment Priority">
-            <input type="submit" value="Add Product">
+
+            <input type="submit" value="Add Order">
         </form>
     </div>
     <a href="orderhistory" style="font-size: 10pt;">order history</a>
