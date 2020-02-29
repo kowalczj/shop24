@@ -80,6 +80,7 @@ class Product(db.Model):
     product_name =          db.Column(db.String(200), nullable=False)
     product_description =   db.Column(db.String(200), nullable=False)
     product_price =         db.Column(db.Numeric(10, 2), nullable=False)
+    product_cost =          db.Column(db.Numeric(10, 2), nullable=False)
     date_created =          db.Column(db.DateTime, default=datetime.utcnow)
     category_id =           db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
 
@@ -171,13 +172,18 @@ def index():
     if request.method == 'POST':
         name = request.form['product_name']
         description = request.form['product_description']
+        cost = request.form['product_cost']
         price = request.form['product_price']
         category = request.form['category_id']
+
+        if price < (1.3 * cost):
+            price = (1.3 * cost)
 
         new_product = Product(
             product_name=name,
             product_description=description,
             product_price=price,
+            product_cost=cost
             category_id=category
         )
 
@@ -243,7 +249,7 @@ def update(id):
     if request.method == 'POST':
         product.product_name = request.form['product_name']
         product.product_description = request.form['product_description']
-        product.product_price = request.form['product_price']
+        product.product_price = (1.3 * request.form['product_cost']
         product.category_id = request.form['category_id']
 
         try:
