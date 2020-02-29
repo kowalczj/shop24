@@ -52,6 +52,9 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(30), unique=True)
     email = db.Column(db.String(30), unique=True)
     password_hash = db.Column(db.String(128))
+    customer_id = db.Column(db.Integer, ForeignKey=('customer.id'))
+    customer = relationship("Customer",back_populates="user")   
+
 
     def setPW(self, password):
         self.password_hash = generate_password_hash(password)
@@ -113,6 +116,7 @@ class Customer(db.Model):
     state        = db.Column(db.String(2), nullable=True)
     zipcode      = db.Column(db.String(5), nullable=True)
     city         = db.Column(db.String(100), nullable=True)
+    user	 = relationship("User", uselist=False, back_populates="customer")
 
     def __repr__(self):
         return '<Customer {}>'.format(self.id)
