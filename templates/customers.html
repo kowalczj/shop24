@@ -10,7 +10,8 @@
     <a href="/">Products</a>
     <a href="{{ url_for('vendors') }}">Vendors</a>
     <a href="{{ url_for('category') }}">Categories</a>
-    <a href="{{ url_for('orders') }}">Orders</a>
+    <a href="{{ url_for('orders') }}">Orders<span class="employee_view">(admin only)</span></a>
+    <a href="{{ url_for('metrics') }}">Metrics</a>
     <a class="active" href="{{ url_for('customers') }}">Customers</a>
     <a href="{{ url_for('profile') }}">Profile</a>
     <a href="{{ url_for('contact') }}">Contact</a>
@@ -59,8 +60,8 @@
             <input type="street_adr" name="street_addr" id="street_adr" placeholder="street address">
             <input type="state" name="state" id="state" placeholder="state">
             <input type="zipcode" name="zipcode" id="zipcode" placeholder="zipcode">
-            <input type="city" name="city" id="city" placeholder="city"><br>
-            <input type="submit" name="finish" value="Finish">
+            <input type="city" name="city" id="city" placeholder="city"><br><br>
+            <input type="submit" name="finish" value="finish">
         </form>
     </div>
 </div>

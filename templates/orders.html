@@ -9,7 +9,8 @@
     <a href="/">Products</a>
 <a href="{{ url_for('vendors') }}">Vendors</a>
 <a href="{{ url_for('category') }}">Categories</a>
-<a class="active" href="{{ url_for('orders') }}">Orders</a>
+<a class="active" href="{{ url_for('orders') }}">Orders<span class="employee_view">(admin only)</span></a>
+<a href="{{ url_for('metrics') }}">Metrics</a>
 <a href="{{ url_for('customers') }}">Customers</a>
 <a href="{{ url_for('profile') }}">Profile</a>
 <a href="{{ url_for('contact') }}">Contact</a>
@@ -21,7 +22,7 @@
     {% if tasks|length < 1 %}
     <h4 style="text-align: center">No orders have been placed yet.</h4>
     {% else %}
-    
+
     <table>
         <tr>
             <th>Shipment Priority</th>
@@ -58,7 +59,7 @@
     </table>
     {% endif %}
 
-    
+
 
 
     <div class="form">

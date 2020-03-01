@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Shop24!</title>
+{% endblock %}
+
+{% block body %}
+<div class="topnav">
+    <a href="/">Products</a>
+    <a href="{{ url_for('vendors') }}">Vendors</a>
+    <a href="{{ url_for('category') }}">Categories</a>
+    <a href="{{ url_for('orders') }}">Orders<span class="employee_view">(admin only)</span></a>
+    <a class="active" href="{{ url_for('metrics') }}">Metrics</a>
+    <a href="{{ url_for('customers') }}">Customers</a>
+    <a href="{{ url_for('profile') }}">Profile</a>
+    <a href="{{ url_for('contact') }}">Contact</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+</div>
+
+<div class="content">
+    <h1 style="text-align: center">Metrics for Products Purchased</h1>
+    <h3 style="text-align: center"><em>A simplified eCommerce Experience</em></h3>
+    <table>
+        <tr>
+            <!-- <th>OrderProduct ID</th> -->
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Cost</th>
+            <th>Net Profit</th>
+        </tr>
+        {% for task in tasks %}
+            <tr>
+                <!-- <td>{{ task.id }}</td> -->
+                {% for product in products %}
+                    {% if product.id == task.product_id %}
+                        <td>{{ product.product_name}}</td>
+                    {% endif %}
+                {% endfor %}
+                <!-- <td>{{ task.product_id }}</td> -->
+                <td>{{ task.quantity }}</td>
+                {% for product in products %}
+                    {% if product.id == task.product_id %}
+                        <td>{{ product.product_price }}</td>
+                        <td>{{ product.product_cost }}</td>
+                        <td>{{ (product.product_price - product.product_cost) * task.quantity }}</td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

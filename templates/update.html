@@ -9,6 +9,7 @@
     <a class="active" href="/">Products</a>
     <a href="{{ url_for('vendors') }}">Vendors</a>
     <a href="{{ url_for('orders') }}">Orders<span class="employee_view">(admin only)</span></a>
+    <a href="{{ url_for('metrics') }}">Metrics</a>
     <a href="{{ url_for('customers') }}">Customers</a>
     <a href="{{ url_for('profile') }}">Profile</a>
     <a href="{{ url_for('contact') }}">Contact</a>
@@ -20,16 +21,16 @@
 
     <div class="form">
         <form action="/update/{{product.id}}" method="POST">
-            
+
             <label style="color: white">Product Name</label> <br>
             <input type="text" name="product_name" id="product_name" placeholder="Product name" value="{{ product.product_name }}"> <br><br>
-            
+
             <label for="product_description" style="color: white">Product Description</label><br>
             <input type="text" name="product_description" id="product_description" placeholder="Description of product" value="{{ product.product_description }}"> <br><br>
-            
+
             <label for="product_price" style="color: white">Product Price</label><br>
             <input type="text" name="product_price" id="product_price"placeholder="Price of product" value="{{(product.product_price)}}"><br><br>
-            
+
             <label for="category_id" style="color: white">Category</label><br>
             <!-- <input type="number" name="category_id" id="category_id"placeholder="Price of product" value="{{ product.category_id }}"><br><br> -->
             <select name="category_id" id="">
