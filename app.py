@@ -175,7 +175,7 @@ def index():
         category = request.form['category_id']
 
         if float(price) < (1.3 * float(cost)):
-            price = round((1.3 * cost), 2)
+            price = round((1.3 * float(cost)), 2)
 
 
         new_product = Product(
