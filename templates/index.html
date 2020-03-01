@@ -9,7 +9,7 @@
     <a class="active" href="/">Products</a>
     <a href="{{ url_for('vendors') }}">Vendors</a>
     <a href="{{ url_for('category') }}">Categories</a>
-    <a href="{{ url_for('orders') }}">Orders<span class="employee_view">(admin only)</span></a>
+    <a href="{{ url_for('orders') }}">Orders</a>
     <a href="{{ url_for('customers') }}">Customers</a>
     <a href="{{ url_for('profile') }}">Profile</a>
     <a href="{{ url_for('contact') }}">Contact</a>
@@ -57,7 +57,7 @@
 
     <div class="form">
         <form action="/" method="POST">
-            <h4>Add Product by completing the form below</h4>
+            <p style="color:#777;font-style:italic">Add Product by completing the form below</p>
             <input type="text" name="product_name" id="content" placeholder="Product name">
             <input type="text" name="product_description" id="content" placeholder="Description of product">
             <input type="number" name="product_cost" id="content" placeholder="Cost of product">

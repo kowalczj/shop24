@@ -4,11 +4,6 @@ body, html {
     background-color: #333;
 }
 
-.employee_view {
-    font-size: small;
-    color: #555;
-}
-
 .topnav {
     overflow: hidden;
     background-color: #333;
@@ -36,7 +31,42 @@ body, html {
 .active, .demo:hover {
     opacity: 1;
 }
-  
+
+.login_container {
+    padding-left: 7%;
+}
+
+.login_container p {
+    color: white;
+    font-size: larger;
+}
+
+.login_container a {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+ul {
+    list-style-type: none;
+    font-style: italic;
+    font-size: 18pt;
+    color: white;
+}
+
+#username, #password, #email, #phone, 
+#first_name, #last_name, #street_adr,
+#zipcode, #city, #state, #content {
+    border-radius: 2px;
+    width: 38%;
+    font-size: large;
+    color: #034732;
+    font-weight: bold;
+}
+
+.login_container #username {
+    font-weight: bold;
+    color: #034732;
+}
 
 h1 {
     color: white;
@@ -84,6 +114,7 @@ td {
 
 .form {
     margin-top: 20px;
+    line-height: 26pt;
 }
 
 #content {
@@ -91,9 +122,33 @@ td {
     /*display: inline;*/
 }
 
+.bottomtext_container {
+    text-align: center;
+}
+
 .bottomtext {
     text-align: center;
     color: #777;
+}
+
+input[value="Sign In"] {
+    width: 15%;
+    font-size: large;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #034732;
+    border-radius: 5px;
+}
+
+input[value="Register Account"] {
+    /*width: 15%;*/
+    font-size: large;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #034732;
+    border-radius: 5px;
 }
 
 input[value="Add Product"] {
@@ -104,7 +159,39 @@ input[value="Add Product"] {
     border-radius: 5px;
 }
 
+input[value="Add Order"] {
+    font-size: large;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #034732;
+    border-radius: 5px;
+}
+
+input[value="Finish"] {
+    font-size: large;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #034732;
+    border-radius: 5px;
+}
+
+input[value="Add Category"] {
+    font-size: large;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #034732;
+    border-radius: 5px;
+}
+
 input[type=text] {
+    color: #034732;
+    font-weight: bold;
+}
+
+form input[type=text] {
     color: #034732;
     font-weight: bold;
 }
