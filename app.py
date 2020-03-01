@@ -248,11 +248,13 @@ def update(id):
     if request.method == 'POST':
         product.product_name = request.form['product_name']
         product.product_description = request.form['product_description']
-        product.product_price = float(round((1.3) * float(request.form['product_cost']), 2))
+        product.product_price = request.form['product_price']
+        product.product_cost = request.form['product_cost']
         product.category_id = request.form['category_id']
 
-        print("Product Price: ", product.product_price)
-
+        if float(product.product_price) < (1.3 * float(request.form['product_cost'])):
+            product.product_price = round((1.3 * float(request.form['product_cost'])), 2)
+            
         try:
             db.session.commit()
             return redirect('/')
