@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 from datetime import datetime
 from flask_login import UserMixin, LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -52,8 +53,6 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(30), unique=True)
     email = db.Column(db.String(30), unique=True)
     password_hash = db.Column(db.String(128))
-    customer_id = db.Column(db.Integer, ForeignKey=('customer.id'))
-    customer = relationship("Customer",back_populates="user")   
 
 
     def setPW(self, password):
@@ -117,7 +116,6 @@ class Customer(db.Model):
     state        = db.Column(db.String(2), nullable=True)
     zipcode      = db.Column(db.String(5), nullable=True)
     city         = db.Column(db.String(100), nullable=True)
-    user	 = relationship("User", uselist=False, back_populates="customer")
 
     def __repr__(self):
         return '<Customer {}>'.format(self.id)
@@ -125,7 +123,7 @@ class Customer(db.Model):
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     category_name = db.Column(db.String(200), nullable=False)
-    
+
     def __repr__(self):
         return '<Task %r>' % self.id
 
@@ -176,14 +174,15 @@ def index():
         price = request.form['product_price']
         category = request.form['category_id']
 
-        if price < (1.3 * cost):
+        if float(price) < (1.3 * float(cost)):
             price = (1.3 * cost)
+
 
         new_product = Product(
             product_name=name,
             product_description=description,
             product_price=price,
-            product_cost=cost
+            product_cost=cost,
             category_id=category
         )
 
@@ -249,7 +248,7 @@ def update(id):
     if request.method == 'POST':
         product.product_name = request.form['product_name']
         product.product_description = request.form['product_description']
-        product.product_price = (1.3 * request.form['product_cost']
+        product.product_price = (1.3) * request.form['product_cost']
         product.category_id = request.form['category_id']
 
         try:
@@ -329,7 +328,7 @@ def ordersUpdate(id):
 def orderproduct():
     if request.method == 'POST':
         if 'order_id' in request.form:
-            
+
             orderID = request.form['order_id']
             productID = request.form['product_id']
             quantity = request.form['quantity']
@@ -340,7 +339,7 @@ def orderproduct():
                 product_id=productID,
                 quantity=quantity,
             )
-            
+
             try:
                 db.session.add(newOrderProduct)
                 db.session.commit()
@@ -350,7 +349,7 @@ def orderproduct():
                 print("Error: ", ex)
                 return "Error: There was a problem adding the new order data"
         elif 'id' in request.form:
-            
+
             orderID = request.form['id']
             tasks = OrderProduct.query.filter(OrderProduct.order_id == orderID).order_by(OrderProduct.id).all()
             return render_template("order_product.html",tasks=tasks, orderID = orderID)
@@ -359,6 +358,7 @@ def orderproduct():
         tasks = OrderProduct.query.filter(OrderProduct.order_id == orderID).order_by(OrderProduct.id).all()
         products = Product.query.all()
         return render_template("order_product.html",tasks=tasks, orderID = orderID, products=products)
+
 
 @app.route("/vendors")
 @login_required
@@ -391,6 +391,7 @@ def orderProductDelete(orderID, id):
     except:
         return 'There was a problem deleting that task'
 
+
 @app.route('/order_product/update/<int:orderID>/<int:id>')
 def orderProductUpdate(orderID, id):
     url = '/order_product?id=' + str(orderID)
@@ -412,11 +413,20 @@ def orderProductUpdate(orderID, id):
         return render_template('update_order_product.html', orderID=orderID, id=id)
 
 
+@app.route('/metrics')
+@login_required
+def metrics():
+    metrics = db.session.query(OrderProduct.product_id, func.sum(OrderProduct.quantity).label('quantity')).group_by(OrderProduct.product_id).all()
+    products = Product.query.all()
+    if request.method == 'GET':
+        return render_template('metrics.html', tasks=metrics, products=products)
+
+
 @app.route('/orderhistory', methods=['POST', 'GET'])
 def orderHistory():
     if request.method == 'POST':
         accountID = request.form['searched_account_id']
-        tasks = Order.query.filter(Order.customer_id == accountID).order_by(Order.shipment_priority).all()        
+        tasks = Order.query.filter(Order.customer_id == accountID).order_by(Order.shipment_priority).all()
         try:
             return render_template('orderhistorydetails.html', tasks=tasks)
         except Exception as ex:
@@ -424,6 +434,7 @@ def orderHistory():
             return "Error: There was a problem viewing the order history"
     else:
         return render_template('orderhistory.html')
+
 
 @app.route("/category", methods=['POST', 'GET'])
 @login_required
@@ -445,6 +456,7 @@ def category():
         categories = Category.query.all()
         return render_template("category.html", categories=categories)
 
+
 @app.route('/category/update/<int:id>', methods=['GET', 'POST'])
 def category_update(id):
     category = Category.query.get_or_404(id)
@@ -461,6 +473,7 @@ def category_update(id):
     else:
         categories = Category.query.all()
         return render_template('update_category.html', category=category)
+
 
 @app.route('/category/delete/<int:id>')
 def category_delete(id):

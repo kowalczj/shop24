@@ -9,6 +9,7 @@
     <a href="/">Products</a>
     <a href="{{ url_for('vendors') }}">Vendors</a>
     <a class="active" href="{{ url_for('orders') }}">Orders<span class="employee_view">(admin only)</span></a>
+    <a href="{{ url_for('metrics') }}">Metrics</a>
     <a href="{{ url_for('customers') }}">Customers</a>
     <a href="{{ url_for('profile') }}">Profile</a>
     <a href="{{ url_for('contact') }}">Contact</a>
@@ -45,21 +46,21 @@
                     <br>
                     <a href="/order_product/update/{{orderID}}/{{task.id}}">Update</a>
                 </td> <!--should perhaps not be visible to custoemrs-->
-                
+
             </tr>
         {% endfor %}
     </table>
     {% endif %}
-    
 
-    
+
+
 
     <div class="form">
         <form action="/order_product" method="POST">
             <h4>Add a product to the current order</h4>
             <input type="hidden" name="order_id" value="{{ orderID }}">
             <!-- <input type="number" name="product_id" id="content" placeholder="Product ID"> -->
-            
+
             <select name="product_id" id="">
                 {% for product in products %}
                     <option value="{{ product.id }}">{{ product.product_name }}</option>
